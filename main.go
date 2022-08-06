@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"os"
+	"unicode"
 )
 
 var homoglyphs = map[rune]rune {
@@ -35,8 +36,8 @@ var homoglyphs = map[rune]rune {
 
     'a': 'а',
     // 'b': '?',
-    'c': 'ϲ',
-    'd': 'ԁ',
+    'c': 'с',
+    'd': 'ⅾ',
     'e': 'е',
     // 'f': '?',
     // 'g': '?',
@@ -82,10 +83,13 @@ func main () {
 
         os.Stdout.WriteString(string(transform(char)))
 
-        // Insert zero-width spaces every 3 characters
-        count += 1
-        if count % 3 == 0 {
-            os.Stdout.WriteString("​")
+        // Insert zero-width spaces between every few characters
+        if unicode.IsLetter(char) || unicode.IsNumber(char) {
+            count += 1
+            if count >= 3 {
+                count = 0
+                os.Stdout.WriteString("​")
+            }
         }
     }
 }
