@@ -100,15 +100,17 @@ func main () {
             }
         }
 
-        os.Stdout.WriteString(string(transform(char)))
-
         // Insert zero-width spaces between every few characters
         if unicode.IsLetter(char) || unicode.IsNumber(char) {
             count += 1
             if count >= 3 {
                 count = 0
-                os.Stdout.WriteString("​")
+                os.Stdout.WriteString("\ufeff")
             }
+        } else {
+            count = 0
         }
+
+        os.Stdout.WriteString(string(transform(char)))
     }
 }
