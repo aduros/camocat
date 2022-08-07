@@ -2,10 +2,13 @@ package main
 
 import (
 	"bufio"
+	"errors"
+	"io"
 	"os"
 	"unicode"
 )
 
+// From http://homoglyphs.net
 var homoglyphs = map[rune]rune {
     'A': 'Α',
     'B': 'Β',
@@ -78,7 +81,11 @@ func main () {
     for {
         char, _, err := reader.ReadRune()
         if err != nil {
-            break // EOF
+            if errors.Is(err, io.EOF) {
+                os.Exit(0)
+            } else {
+                os.Exit(1)
+            }
         }
 
         os.Stdout.WriteString(string(transform(char)))
