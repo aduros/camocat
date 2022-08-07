@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"unicode"
@@ -75,7 +76,17 @@ func transform (char rune) rune {
 }
 
 func main () {
-    reader := bufio.NewReader(os.Stdin)
+    file := os.Stdin
+    if len(os.Args) > 1 && os.Args[1] != "-" {
+        var err error
+        file, err = os.Open(os.Args[1])
+        if err != nil {
+            fmt.Fprintln(os.Stderr, err)
+            os.Exit(1)
+        }
+    }
+
+    reader := bufio.NewReader(file)
     count := 0
 
     for {
@@ -84,6 +95,7 @@ func main () {
             if errors.Is(err, io.EOF) {
                 os.Exit(0)
             } else {
+                fmt.Fprintln(os.Stderr, err)
                 os.Exit(1)
             }
         }
